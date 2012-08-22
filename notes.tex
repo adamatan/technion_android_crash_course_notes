@@ -1,0 +1,110 @@
+%Format: Latex
+\documentclass{article}
+\setlength{\textwidth}{17cm}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{-1.5cm}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+
+\usepackage{listings}
+
+\begin{document}
+\title{Android Crash Course - Notes}
+\author{Typed by Adam Matan, \texttt{adam@matan.name} \\
+\texttt{http://matan.name}}
+\date{Technion, Israel, Summer 2012}
+
+\maketitle
+
+\begin{abstract}
+This document is a very poor replacement for the course slides; Instead, it focuses on the topics that were discussed in class.
+\end{abstract}
+
+
+\section{UI}
+\subsection{Layouts}
+A layout is an object that defines the way UI elements are ordered.
+
+\subsubsection{Relative layout}
+
+The \texttt{RelativeLayout} layout defines the position of each element in relation to other elements and the layout itself. For example:
+
+An \texttt{Activity} is preferred over a \texttt{Layout} because it is reusable. Suppose that we create an activity for logging in into the Technion user page. 
+
+\begin{itemize}
+\item The \texttt{gravity} property
+\end{itemize}
+
+\subsection{Menus and Dialogs}
+
+Each Android device has a menu button. Older devices have a physical one, while newer devices have a touch area. The menu button is important because the user expects to interact with menu items ( \texttt{exit},  \texttt{settings} etc.) Therefore, an application with a menu is easier to navigate and operate. Each application is associated with a default menu, which has a \texttt{settings} item that does nothing.
+
+A menu consists of menu items and submenus. The submenus are limited to one hierarchy level (i.e., there are no sub-sub menus).
+
+
+
+
+
+
+\subsection{Starting level} Many graduate students
+arrive in the department with no background at all in numerical analysis, or computers.
+For this reason, the first part of the course will cover \textit{all} of
+AM261 at an accelerated pace. \textit{ALL students} are
+required to pass an examination on the material taught in AM261:
+(Introduction to Numerical Analysis).
+Students who are confident that they can obtain 80\% on an AM261 level exam can write such an exam
+early, and skip the lectures devoted to that material.
+
+\subsection{Textbooks}
+\begin{itemize}
+\item
+The AM261 material will follow ``Numerical methods with Matlab" by G. Recktenwald (Prentice Hall).
+\item
+More advanced material will follow ``Numerical Linear Algebra" by Trefethen and Bau (SIAM).
+Any student who wants to buy this beautiful book, should ask me about SIAM membership.
+\item
+Other books that can be referred to are ``Matlab guide" by D. Higham and N. Higham;
+Learning \LaTeX\ by Griffiths and D. Higham; ``Handbook of Writing for the Mathematical Sciences"
+by N. Higham.
+\end{itemize}
+
+\section{Numerical topics}
+For each topic, the course is split into a section at AM261 level, and one at AM561 level.
+The chapters refer to Recktenwald.
+\begin{itemize}
+\item (Ch 5) Floating point numbers. Precision. (561) IEEE standard.
+\item (Ch 5) Errors. (561) Forward and backward error. Condition number.
+\item (561) Numerical differentiation and derivative formulae for differential equations.
+\item (Ch 6) Root finding. Bisection, Newton. (561) Multiple Newton. Halley.
+\item (Ch 7,8) Numerical Linear Algebra. Multiplication; Norms; Turing factors; Condition number.
+(561) QR, SVD factors. Comparison of algorithms.
+\item (Ch 10) Interpolation. polyfit, spline. Basis.
+\item (Ch 9) Least-squares. Normal equations. (561) QR factors.
+\item (Ch 11) Numerical integration. Newton-Cotes; Gaussian. (561) Romberg.
+\item (Ch 12) Numerical solution of ODEs. Euler. (561) Stiff and non-stiff systems.
+\item (561) Eigenvalues.
+\end{itemize}
+
+\section{Related topics}
+These topics are an integral part of the course and are designed to equip the student
+with essential research skills.
+\begin{itemize}
+\item Use of \LaTeX2e. All assignments must be submitted in \LaTeX.
+\item Use of Matlab and other languages, including debugging tools.
+\item Use of software products (Good and bad):  Netlib, Numerical Recipes.
+\end{itemize}
+
+\section{Assessment}
+The assessment in this course will be based on the following.
+\begin{itemize}
+\item A midterm examination, mostly of AM261 material. The midterm takes place on
+Saturday November 1. There is a written component 9--12 and a computer component 2 -- 5.
+%\item A time-limited final examination, written unaided and `hands on' at a computer,
+%in which you will
+%demonstrate your ability to use computational software, and to write your conclusions in
+%\LaTeX.
+\item Four computational assignments, submitted in \LaTeX.
+\end{itemize}
+
+
+\end{document}
