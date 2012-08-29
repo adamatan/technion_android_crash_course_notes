@@ -243,6 +243,6 @@ Every table should have a \cw{\_id} column, with a unique value for each row. \e
 The contents of a database table can be delegated to 
 
 \section{Content providers}
-A Content provider is a component that lets the developer expose data (typically from a database), to other applications. The standard URI format for 
+A Content Provider lets an application expose data to other applications in a simple, REST-like fashion. The \cw{ContentProvider} Abstract Class is typically coupled with a \cw{ContentResolver} class, which gives programmatic access to the content. Android offers a few standard content providers, most notably \cw{Settings.System}, which exposes data like \cw{SCREEN\_BRIGHTNESS}. The standard URI format for a Content Provider is \cw{content//}
 
 \end{document}
