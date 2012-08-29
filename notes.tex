@@ -92,8 +92,7 @@ showstringspaces=false}
 \maketitle
 
 \begin{abstract}
-This is a summary of the 
- lectures given in the by Dr. Amnon Dekel and Mr. Haim Michael in the Android
+This is a summary of the lectures given by Dr. Amnon Dekel and Mr. Haim Michael. It is assumed that the reader has prior knowledge of the course slides, and intimate acquaintance with the abilities of the Google search engine.
 \end{abstract}
 
 \tableofcontents
@@ -227,10 +226,19 @@ The aforementioned SQL operations are supported via corresponding delegator meth
 \end{center}
 
 \subsection{The \_ID Column}
-\includegraphics[width=0.3\textwidth]{img/warning_sign.eps}
-Every table
+
+\begin{center}
+\includegraphics[width=0.05\textwidth]{img/warning_sign.eps}
+\end{center}
+
+Every table should have a \cw{\_id} column, with a unique value for each row. \emph{This column is not created automatically}, and creating it will save the developer from future errors when using any subclass of \cw{CursorAdapter}. 
 
 \subsection{Thread concerns}
 
+\subsection{DB With UI - \cw{SimpleCursorAdapter}}
+The contents of a database table can be delegated to 
+
+\section{Content providers}
+A Content provider is a component that lets the developer expose data (typically from a database), to other applications. 
 
 \end{document}
