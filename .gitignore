@@ -1,0 +1,6 @@
+*.gz
+notes.aux
+notes.cls
+notes.log
+notes.out
+notes.toc

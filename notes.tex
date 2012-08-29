@@ -6,9 +6,84 @@
 \setlength{\oddsidemargin}{0in}
 \setlength{\evensidemargin}{0in}
 
+\usepackage{graphicx, listings,color}
+\usepackage{fontspec}
+\usepackage{tikz}
 \usepackage{listings}
+\usepackage{url}
+
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+\def\cw#1{\texttt{#1}}
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  showstringspaces=false,
+  commentstyle=\color{gray}\upshape
+}
+
+\lstdefinelanguage{XML}
+{
+  basicstyle=\ttfamily\color{darkblue}\bfseries,
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type}% list your attributes here
+}
+
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+%numbers=left,
+%numberstyle=\tiny\color{black},
+%stepnumber=1,
+numbersep=12pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+
+\usepackage{hyperref}
+\usepackage{float}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
 
 \begin{document}
+
+\def\codefont{
+\fontspec{Courier New}
+  \fontsize{9pt}{11pt}\selectfont}
+\definecolor{codebgcolor}{HTML}{EDEDED}
+\newenvironment{code}
+{\begin{center}
+    \begin{tikzpicture}
+      \node [fill=codebgcolor,rounded corners=5pt]
+      \bgroup
+      \bgroup\codefont
+      \begin{tabular}{l}}
+      {\end{tabular}
+      \egroup
+      \egroup;
+    \end{tikzpicture}
+  \end{center}}
+
+
 \title{Android Crash Course - Notes}
 \author{Typed by Adam Matan, \texttt{adam@matan.name} \\
 \texttt{http://matan.name}}
@@ -17,9 +92,11 @@
 \maketitle
 
 \begin{abstract}
-This document is a very poor replacement for the course slides; Instead, it focuses on the topics that were discussed in class.
+This is a summary of the 
+ lectures given in the by Dr. Amnon Dekel and Mr. Haim Michael in the Android
 \end{abstract}
 
+\tableofcontents
 
 \section{UI}
 \subsection{Layouts}
@@ -37,74 +114,104 @@ An \texttt{Activity} is preferred over a \texttt{Layout} because it is reusable.
 
 \subsection{Menus and Dialogs}
 
-Each Android device has a menu button. Older devices have a physical one, while newer devices have a touch area. The menu button is important because the user expects to interact with menu items ( \texttt{exit},  \texttt{settings} etc.) Therefore, an application with a menu is easier to navigate and operate. Each application is associated with a default menu, which has a \texttt{settings} item that does nothing.
+Each Android device has a menu button. Older devices have a physical one, while newer devices have a touch area. The menu button is important because the user expects to interact with menu items like \texttt{exit} or  \texttt{settings}. Therefore, an application with a menu is often more intuitive. Each application is associated with a default menu, which has a \texttt{settings} item that does nothing.
 
-A menu consists of menu items and submenus. The submenus are limited to one hierarchy level (i.e., there are no sub-sub menus).
+A menu consists of menu items and submenus. The submenus are limited to one hierarchy level (i.e., there are no sub-sub menus). The items can be either associated with a \texttt{OnMenuItemClickListener}, or with an explicit \texttt{Intent}.
+
+Menu items are not limited to text;  An icon can greatly increase their readability.
+
+\begin{figure}[h!]
+  \centering
+      \includegraphics[width=0.5\textwidth]{img/icons.jpeg}
+  \caption{Combining Icons and Text in a menu. This example is not taken from an Android environment.}
+\end{figure}
+
+\section{Activity Data}
+\subsection{MIME-type}
+\href{http://en.wikipedia.org/wiki/MIME}{Multipurpose Internet Mail Extensions (MIME)} is an Internet format that defines data type for files. It was originally developed for email and web resources. MIME is used to define the data that is stored in an Intent.
+
+\begin{code} \begin{lstlisting}[language=Java]
+helloLanguagesIntent.setType("vnd.abelski.hello.translate/vnd.dictionary");
+\end{lstlisting} \end{code}
+
+\section{Sensors}
+
+\subsection{Basics}
+
+getSystemService() is a method that "Return the handle to a system-level service by name", like VIBRATOR\_SERVICE or SENSOR\_SERVICE.
+
+\begin{code} \begin{lstlisting}[language=Java]
+manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+sensor = manager.getDefaultSensor(Sensor.TYPE_LIGHT);
+\end{lstlisting} \end{code}
+
+
+\subsection{Threads}
+Threads in Android work pretty much the same as they work in Java.
+
+\subsubsection{The Main (UI) Thread}
+The UI Thread (AKA main thread) is a special thread that has exclusive control on UI elements. Blocking or delaying the main thread is a hideous idea, which will probably cause an "Application Not Responsive" error message. Therefore, Networking activity should always be done in a different thread. In the recent versions of Android, this behaviour is forced - networking can not be done from the main thread.
+
+\subsubsection{Updating UI elements from other Threads}
+
+An ordinary thread may need to update a UI element. This can happen, for example, if some search result returned from a network connection, and we would like to update a text box. This is done by sending a Runnable() object to the main thread, using either post() or runOnUiThread(). The main thread has a queue of Runnables, and it executes the run() methods.
+
+\begin{code} \begin{lstlisting}[language=Java]
+public final void runOnUiThread (Runnable action)
+public boolean post(Runnable action)
+\end{lstlisting} \end{code}
+
+Alternatively, the AsyncTask class can be used to run code from the main thread in a non-blocking fashion. For example, if  we define DownloadFilesTask that extends AsyncTask, we can invoke DownloadFilesTask from the main thread:
+
+\begin{code} \begin{lstlisting}[language=Java]
+new DownloadFilesTask().execute(url1, url2, url3);
+\end{lstlisting} \end{code}
+
+\subsubsection{The Handler Class}
+The Handler Class is a nice inter-Thread communication mechanism. Handlers can be used to pass Runnables and Messages. 
 
 
 
+\section{Java Web Services and DOM}
+JSON, XML, and REST and DOM services were covered briefly.
 
+\subsection{Web Services in Android}
 
+The Android environment utilizes Apache's \cw{HttpClient} HttpClient, which has three important classes: \cw{HttpGet}, \cw{HttpPost} and \cw{HttpResponse}. 
 
-\subsection{Starting level} Many graduate students
-arrive in the department with no background at all in numerical analysis, or computers.
-For this reason, the first part of the course will cover \textit{all} of
-AM261 at an accelerated pace. \textit{ALL students} are
-required to pass an examination on the material taught in AM261:
-(Introduction to Numerical Analysis).
-Students who are confident that they can obtain 80\% on an AM261 level exam can write such an exam
-early, and skip the lectures devoted to that material.
+There are some noteworthy points regarding \cw{HttpPost}. Let's examine the code from the lecture slides:
 
-\subsection{Textbooks}
+\begin{code} \begin{lstlisting}[language=Java]
+...HttpClient client = new DefaultHttpClient();HttpPost request = new HttpPost("http://mysite.com/upload.php");List<NameValuePair> parameters =   new ArrayList<NameValuePair>();parameters.add(   new BasicNameValuePair("param_name", "param_value"));UrlEncodedFormEntity encodedEntity =   new UrlEncodedFormEntity(parameters);request.setEntity(encodedEntity);HttpResponse response = client.execute(request);in = new BufferedReader(   new InputStreamReader(response.getEntity().getContent()));...
+\end{lstlisting} \end{code}
+
 \begin{itemize}
-\item
-The AM261 material will follow ``Numerical methods with Matlab" by G. Recktenwald (Prentice Hall).
-\item
-More advanced material will follow ``Numerical Linear Algebra" by Trefethen and Bau (SIAM).
-Any student who wants to buy this beautiful book, should ask me about SIAM membership.
-\item
-Other books that can be referred to are ``Matlab guide" by D. Higham and N. Higham;
-Learning \LaTeX\ by Griffiths and D. Higham; ``Handbook of Writing for the Mathematical Sciences"
-by N. Higham.
+\item{The \cw{POST} parameters are set using a \cw{List} of \cw{NameValuePair}s. }
+\item{The URL is encoded using \cw{UrlEncodedFormEntity}. The encoding sets spaces and other strange characters to unambiguous  \href{http://en.wikipedia.org/wiki/Percent-encoding}{Percent Encoding}. }
 \end{itemize}
 
-\section{Numerical topics}
-For each topic, the course is split into a section at AM261 level, and one at AM561 level.
-The chapters refer to Recktenwald.
-\begin{itemize}
-\item (Ch 5) Floating point numbers. Precision. (561) IEEE standard.
-\item (Ch 5) Errors. (561) Forward and backward error. Condition number.
-\item (561) Numerical differentiation and derivative formulae for differential equations.
-\item (Ch 6) Root finding. Bisection, Newton. (561) Multiple Newton. Halley.
-\item (Ch 7,8) Numerical Linear Algebra. Multiplication; Norms; Turing factors; Condition number.
-(561) QR, SVD factors. Comparison of algorithms.
-\item (Ch 10) Interpolation. polyfit, spline. Basis.
-\item (Ch 9) Least-squares. Normal equations. (561) QR factors.
-\item (Ch 11) Numerical integration. Newton-Cotes; Gaussian. (561) Romberg.
-\item (Ch 12) Numerical solution of ODEs. Euler. (561) Stiff and non-stiff systems.
-\item (561) Eigenvalues.
-\end{itemize}
+\section{Database}
+\subsection{SQLite}
 
-\section{Related topics}
-These topics are an integral part of the course and are designed to equip the student
-with essential research skills.
-\begin{itemize}
-\item Use of \LaTeX2e. All assignments must be submitted in \LaTeX.
-\item Use of Matlab and other languages, including debugging tools.
-\item Use of software products (Good and bad):  Netlib, Numerical Recipes.
-\end{itemize}
+\begin{center}
+\includegraphics[width=0.3\textwidth]{img/sqlite_logo_wikipedia.eps}
+\end{center}
 
-\section{Assessment}
-The assessment in this course will be based on the following.
-\begin{itemize}
-\item A midterm examination, mostly of AM261 material. The midterm takes place on
-Saturday November 1. There is a written component 9--12 and a computer component 2 -- 5.
-%\item A time-limited final examination, written unaided and `hands on' at a computer,
-%in which you will
-%demonstrate your ability to use computational software, and to write your conclusions in
-%\LaTeX.
-\item Four computational assignments, submitted in \LaTeX.
-\end{itemize}
+SQLite is an open-source, cross-platform relational database stored in a single file; it is the native database solution used in Android. It is simple to use, but lacks support in advanced features like Stored Procedures.
+
+ In order to use SQLite, the caller app creates a class that inherits \cw{SQLiteOpenHelper}, and needs implement two methods. The first, \cw{onCreate(SQLiteDatabase database)} defines the behaviour when the app is first installed and the database does not yet exist. The seconds, \cw{onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)}, is executed when a previous version of the app is found. Each app has a DB version coupled with its app version.
+
+From the lecture slides:
+
+\begin{code} \begin{lstlisting}[language=Java]
+new DownloadFilesTask().execute(url1, url2, url3);
+\end{lstlisting} \end{code}
+
+
+
+\subsection{DB versions}
+
+Applications often couple app version with DB version.
 
 
 \end{document}
