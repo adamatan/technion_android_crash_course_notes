@@ -199,19 +199,37 @@ There are some noteworthy points regarding \cw{HttpPost}. Let's examine the code
 
 SQLite is an open-source, cross-platform relational database stored in a single file; it is the native database solution used in Android. It is simple to use, but lacks support in advanced features like Stored Procedures.
 
- In order to use SQLite, the caller app creates a class that inherits \cw{SQLiteOpenHelper}, and needs implement two methods. The first, \cw{onCreate(SQLiteDatabase database)} defines the behaviour when the app is first installed and the database does not yet exist. The seconds, \cw{onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)}, is executed when a previous version of the app is found. Each app has a DB version coupled with its app version.
+\subsection{Initializing a SQLite database}
+ In order to use SQLite, the caller app creates a class that inherits \cw{SQLiteOpenHelper}, and needs to implement two methods. The first, \cw{onCreate(SQLiteDatabase database)} defines the behaviour when the app is first installed and the database does not yet exist. 
 
-From the lecture slides:
+The seconds method, \cw{onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)}, is executed when a previous version of the app is found. Each app should present a DB version coupled with its app version. \cw{onUpgrade} converts old database schema to new database schema, given the old DB version and new DB version.
 
 \begin{code} \begin{lstlisting}[language=Java]
-new DownloadFilesTask().execute(url1, url2, url3);
+public class DatabaseHelper extends SQLiteOpenHelper{}
+@Overridepublic void onCreate(SQLiteDatabase database)
+@Overridepublic void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 \end{lstlisting} \end{code}
 
+The \cw{execSQL()} method is used for creating the database structure. It supports any old SQL command, except for \cw{SELECT}, \cw{INSERT}, \cw{UPDATE} and \cw{DELETE}.
+
+\subsection{SQLite sans SQL?}
+The aforementioned SQL operations are supported via corresponding delegator methods:
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    SQL Command & Equivalent method \\ \hline
+    \cw{INSERT} & BLAH \\ \hline
+    \cw{UPDATE} & BLAH \\ \hline
+    \cw{DELETE} & BLAH \\ \hline
+    \cw{SELECT} & BLAH \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection{The _ID Column}
 
 
-\subsection{DB versions}
-
-Applications often couple app version with DB version.
+\subsection{Thread concerns}
 
 
 \end{document}
